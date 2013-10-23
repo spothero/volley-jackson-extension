@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">VolleyJacksonDemo</string>
+    <string name="date_title">Date Response:</string>
+    <string name="header_title">Header Response:</string>
+</resources>

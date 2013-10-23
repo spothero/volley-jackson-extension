@@ -1,0 +1,123 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.spothero'
+version = '1.0.0'
+sourceCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    provided
+    deployerJars
+}
+
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
+    provided 'com.google.android:android:4.1.1.4'
+    provided 'com.google.android:annotations:4.1.1.4'
+    deployerJars 'org.apache.maven.wagon:wagon-webdav:1.0-beta-2'
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+        java {
+            srcDir 'libraries/volley/src'
+            srcDir 'src'
+        }
+    }
+}
+
+javadoc {
+    classpath += configurations.provided
+    title = " volley-jackson-extension ${version} API"
+	options.bottom = 'Available under the Apache License, Version 2.0 - <i>Copyright &#169; 2013 <a href="http://spothero.com">SpotHero</a>. All Rights Reserved.</i>'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    if (project.hasProperty('signing.keyId') && project.hasProperty('signing.password') && project.hasProperty('signing.secretKeyRingFile')) {
+        sign configurations.archives
+    } else {
+        println "Signing information missing/incomplete for ${project.name}"
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+            } else {
+                println "Warning: sonatypeUsername and/or sonatypePassword properties not provided"
+            }
+
+            pom.project {
+               name 'volley-jackson-extension'
+               packaging 'jar'
+               description 'Library to easily interface the Android Volley and Jackson projects for super fast JSON decoding'
+               url 'https://github.com/spothero/volley-jackson-extension'
+
+               scm {
+                   url 'https://github.com/spothero/volley-jackson-extension'
+                   connection 'scm:git@github.com:spothero/volley-jackson-extension.git'
+                   developerConnection 'scm:git@github.com:spothero/volley-jackson-extension.git'
+               }
+
+               issueManagement {
+                   system 'GitHub Issues'
+                   url 'https://github.com/spothero/volley-jackson-extension/issues'
+               }
+
+               licenses {
+                   license {
+                       name 'The Apache Software License, Version 2.0'
+                       url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                       distribution 'repo'
+                   }
+               }
+
+               developers {
+                   developer {
+                       id 'spothero'
+                       name 'SpotHero'
+                   }
+                   developer {
+                       id 'EricKuck'
+                       name 'Eric Kuck'
+                   }
+               }
+ 
+               organization {
+                   name 'SpotHero'
+                   url 'http://spothero.com'
+               }
+           }
+        }
+    }
+}
