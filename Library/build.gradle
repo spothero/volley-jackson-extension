@@ -2,7 +2,8 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-group = 'com.spothero'
+archivesBaseName = 'volley-jackson-extension'
+group = 'com.spothero.volley'
 version = '1.0.0'
 sourceCompatibility = 1.6
 
