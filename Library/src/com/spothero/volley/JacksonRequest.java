@@ -189,7 +189,7 @@ public class JacksonRequest<T> extends Request<T> {
 				return Response.error(new ParseError(response));
 			}
 		}
-		return Response.success(returnData, HttpHeaderParser.parseCacheHeaders(response));
+		return mListener.onParseResponseComplete(Response.success(returnData, HttpHeaderParser.parseCacheHeaders(response)));
 	}
 
 	@Override

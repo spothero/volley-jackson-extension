@@ -8,7 +8,7 @@ This library was designed to be as simple to use as possible.  Here are the step
 * Include the maven dependencies for this library as well as Jackson's libraries in your build.gradle file.  (Note: if you aren't yet using the awesome gradle build system, you can skip this step and just include the .jar files in your project directly.)
 
 		dependencies {
-			compile 'com.spothero:volley-jackson-extension:1.0.0'
+			compile 'com.spothero:volley-jackson-extension:1.0.1'
 			compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
     		compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
     		compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.3'
